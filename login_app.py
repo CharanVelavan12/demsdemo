@@ -1,4 +1,5 @@
 import streamlit as st
+import subprocess
 
 # Replace these credentials with your own
 USERNAME = 'your_username'
@@ -17,7 +18,7 @@ def main():
     st.title("Login Page")
     if login():
         st.text("Redirecting to Graph Page...")
-        st.experimental_run_as_function('graph_app.py')
+        subprocess.run(["streamlit", "run", "graph_app.py"])
 
 if __name__ == "__main__":
     main()
