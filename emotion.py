@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
 from streamlit.hashing import generate_password_hash, verify_password
+from st_aggrid import AgGrid
 
 # Replace these credentials with your own
 USERNAME = 'your_username'
@@ -91,6 +92,10 @@ def main():
         st.image(bar_graph, use_column_width=True)
 
         st.markdown(f"**Dominant Emotion:** {dominant_emotion}")
+
+        # Display AgGrid table
+        st.markdown("## Emotion Data Table")
+        AgGrid(df)
 
 if __name__ == "__main__":
     main()
