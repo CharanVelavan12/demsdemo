@@ -1,15 +1,8 @@
 import streamlit as st
 import pandas as pd
-import matplotlib
-matplotlib.use("Agg")  # Add this line
-import matplotlib.pyplot as plt
-from io import BytesIO
-import base64
+import plotly.express as px
 from streamlit.hashing import generate_password_hash, verify_password
 from st_aggrid import AgGrid
-
-# The rest of your code...
-
 
 # Replace these credentials with your own
 USERNAME = 'your_username'
@@ -37,41 +30,14 @@ def login():
     return logged_in
 
 def create_line_graph(df):
-    plt.figure(figsize=(10, 6))
-    plt.plot(df['Timestamp'], df['Emotion'], marker='o')
-    plt.title('Emotion vs Timestamp')
-    plt.xlabel('Timestamp')
-    plt.ylabel('Emotion')
-    plt.xticks(rotation=45)
-
-    # Save the plot to a BytesIO object
-    img = BytesIO()
-    plt.savefig(img, format='png')
-    img.seek(0)
-
-    # Convert the plot to base64 for embedding in Streamlit
-    line_graph = base64.b64encode(img.getvalue()).decode()
-
-    return line_graph
+    fig = px.line(df, x='Timestamp', y='Emotion', markers=True, title='Emotion vs Timestamp')
+    return fig
 
 def create_bar_graph(df):
-    plt.figure(figsize=(10, 6))
-    emotion_counts = df['Emotion'].value_counts()
-    dominant_emotion = emotion_counts.idxmax()
-    plt.bar(emotion_counts.index, emotion_counts.values)
-    plt.title('Emotion Counts vs Timestamp')
-    plt.xlabel('Emotion')
-    plt.ylabel('Count')
-
-    # Save the plot to a BytesIO object
-    img = BytesIO()
-    plt.savefig(img, format='png')
-    img.seek(0)
-
-    # Convert the plot to base64 for embedding in Streamlit
-    bar_graph = base64.b64encode(img.getvalue()).decode()
-
-    return bar_graph, dominant_emotion
+    fig = px.bar(df['Emotion'].value_counts().reset_index(), x='index', y='Emotion', title='Emotion Counts vs Timestamp',
+                 labels={'index': 'Emotion', 'Emotion': 'Count'})
+    dominant_emotion = df['Emotion'].value_counts().idxmax()
+    return fig, dominant_emotion
 
 def main():
     global logged_in
@@ -91,10 +57,10 @@ def main():
 
         # Display graphs
         st.markdown("## Emotion vs Timestamp")
-        st.image(line_graph, use_column_width=True)
+        st.plotly_chart(line_graph, use_container_width=True)
 
         st.markdown("## Emotion Counts vs Timestamp")
-        st.image(bar_graph, use_column_width=True)
+        st.plotly_chart(bar_graph, use_container_width=True)
 
         st.markdown(f"**Dominant Emotion:** {dominant_emotion}")
 
