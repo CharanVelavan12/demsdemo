@@ -1,10 +1,15 @@
 import streamlit as st
 import pandas as pd
+import matplotlib
+matplotlib.use("Agg")  # Add this line
 import matplotlib.pyplot as plt
 from io import BytesIO
 import base64
 from streamlit.hashing import generate_password_hash, verify_password
 from st_aggrid import AgGrid
+
+# The rest of your code...
+
 
 # Replace these credentials with your own
 USERNAME = 'your_username'
